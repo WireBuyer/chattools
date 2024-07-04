@@ -1,0 +1,10 @@
+server:
+  servlet:
+    session:
+      timeout: 50d
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 11MB
