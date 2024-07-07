@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.wirebuyer</groupId>
-    <artifactId>chattools</artifactId>
+    <artifactId>chattools-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>chattools</name>
-    <description>chattools</description>
+    <name>chattools-backend</name>
+    <description>chattools-backend</description>
     <url/>
     <licenses>
         <license/>

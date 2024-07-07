@@ -62,7 +62,7 @@ public class ImageToBrailleService {
             BufferedImage padded_image = new BufferedImage(image.getWidth() + padded_width, image.getHeight() + padded_height, image.getType());
             Graphics2D g = padded_image.createGraphics();
             // pad with different coloured backgrounds to make it not set a dot
-            g.setColor((brailleOptions.isInverted()) ? Color.WHITE : Color.BLACK);
+            g.setColor((brailleOptions.isInverted()) ? Color.BLACK : Color.WHITE);
             g.fillRect(0, 0, image.getWidth() + padded_width, image.getHeight() + padded_height);
             padded_image.getGraphics().drawImage(image, 0, 0, null);
             g.dispose();
