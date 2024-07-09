@@ -38,7 +38,7 @@ const AsciiArt = () => {
     );
 
     // Placeholder for API call
-    fetch("http://localhost:8080/brailleConverter", {
+    fetch("/api/brailleConverter", {
       method: "POST",
       body: data,
     })
