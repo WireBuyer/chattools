@@ -1,0 +1,11 @@
+:80 {
+	# backend
+	route /api/* {
+		reverse_proxy localhost:8080
+	}
+
+	# react server
+	route /* {
+		reverse_proxy localhost:5173
+	}
+}
