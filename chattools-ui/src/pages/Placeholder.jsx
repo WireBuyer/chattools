@@ -1,5 +1,4 @@
-// src/pages/Placeholder.jsx
-import React from 'react';
+import React from "react";
 
 const Placeholder = () => {
   return (

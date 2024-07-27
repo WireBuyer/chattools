@@ -1,5 +1,4 @@
-// src/components/AuthButton.jsx
-import React from 'react';
+import React from "react";
 
 const AuthButton = ({ user }) => {
   return (
