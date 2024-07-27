@@ -1,11 +1,13 @@
 :80 {
-	# backend
-	route /api/* {
-		reverse_proxy localhost:8080
+	handle /api/* {
+		reverse_proxy backend:8080
 	}
 
-	# react server
-	route /* {
-		reverse_proxy localhost:5173
+	handle /* {
+		root * /usr/share/caddy
+		file_server
+		try_files {path} /index.html
 	}
+
+	encode zstd gzip
 }
