@@ -15,6 +15,7 @@ const AsciiArt = () => {
     if (file) {
       setImageFile(file);
       const reader = new FileReader();
+      // @ts-ignore
       reader.onload = (e) => setImagePreview(e.target.result);
       reader.readAsDataURL(file);
     }
@@ -29,6 +30,7 @@ const AsciiArt = () => {
       inverted: inverted ? true : false,
     };
 
+    // @ts-ignore
     data.append("user_image", imageFile);
     data.append(
       "brailleOptions",
@@ -46,7 +48,7 @@ const AsciiArt = () => {
         if (response.ok) {
           return response.text();
         }
-        throw new Error("error!!!")
+        throw new Error("error!!!");
       })
       .then((data) => setAsciiArt(data))
       .catch((error) => console.error(error));
@@ -69,6 +71,7 @@ const AsciiArt = () => {
           <input
             type="number"
             value={width}
+            // @ts-ignore
             onChange={(e) => setWidth(e.target.value)}
             min="1"
             max="4000"
@@ -79,6 +82,7 @@ const AsciiArt = () => {
           <input
             type="number"
             value={height}
+            // @ts-ignore
             onChange={(e) => setHeight(e.target.value)}
             min="1"
             max="4000"
@@ -89,6 +93,7 @@ const AsciiArt = () => {
           <input
             type="number"
             value={threshold}
+            // @ts-ignore
             onChange={(e) => setThreshold(e.target.value)}
             min="0"
             max="255"
