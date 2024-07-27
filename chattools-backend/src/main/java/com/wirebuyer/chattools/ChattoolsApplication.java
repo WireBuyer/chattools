@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class ChattoolsApplication {
     /* TODO:
+        add better support for transparency
         move this list to github
         add docker support
         add exceptions
