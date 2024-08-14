@@ -3,6 +3,8 @@ package com.wirebuyer.chattools.toBraille;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
@@ -21,6 +23,7 @@ public class BrailleOptions {
     private Integer height = null;
 
     @JsonProperty("threshold")
+    @JsonSetter(nulls = Nulls.SKIP)
     @Min(value = 0, message = "Value must be between 0 and 255")
     @Max(value = 255, message = "Value must be between 0 and 255")
     private int threshold = 128;

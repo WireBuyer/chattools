@@ -14,12 +14,15 @@ public class ImageToBrailleController {
         this.imageToBrailleService = imageToBrailleService;
     }
 
+    // use @RequestPart for the DTO since it uses HttpMessageConverters and the header for that part of the request.
+    // Used to convert JSON. Use @RequestParam for something like String
     @PostMapping(value = "/brailleConverter")
     @CrossOrigin(origins = "*")
     public String submit_image(
-            @RequestPart @Validated BrailleOptions brailleOptions,
+            @RequestPart(required = false) @Validated BrailleOptions brailleOptions,
             @RequestPart MultipartFile user_image)
     {
+        if (brailleOptions == null) { brailleOptions = new BrailleOptions(); }
         return imageToBrailleService.convertImage(user_image, brailleOptions);
     }
 }
