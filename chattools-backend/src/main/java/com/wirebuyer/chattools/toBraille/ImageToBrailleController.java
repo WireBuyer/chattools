@@ -22,6 +22,7 @@ public class ImageToBrailleController {
             @RequestPart(required = false) @Validated BrailleOptions brailleOptions,
             @RequestPart MultipartFile user_image)
     {
+        System.out.println("test");
         if (brailleOptions == null) { brailleOptions = new BrailleOptions(); }
         return imageToBrailleService.convertImage(user_image, brailleOptions);
     }

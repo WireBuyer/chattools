@@ -25,7 +25,6 @@ public class ImageToBrailleService {
        */
         try {
             img = ImageIO.read(user_image.getInputStream());
-            System.out.println("height: " + img.getHeight() + " width: " + img.getWidth());
         } catch (IOException e) {
             System.out.println("ERROR READING IMAGE");
             throw new RuntimeException(e);
