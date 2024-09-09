@@ -140,7 +140,7 @@ function BrailleForm({ setAsciiText }) {
             label: classes.label,
           }}
         />
-        <ImageArea setImage={setImage} image={image} error={imageError} />
+        <ImageArea setImage={setImage} error={imageError} />
       </Fieldset>
       <Button onClick={handleSubmit}>Submit</Button>
       
