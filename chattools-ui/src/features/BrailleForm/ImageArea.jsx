@@ -3,7 +3,7 @@ import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { IconPhoto, IconUpload, IconX } from "@tabler/icons-react";
 import { useState } from "react";
 
-function ImageArea({ setImage, image, error }) {
+function ImageArea({ setImage, error }) {
   const [imagePreview, setimagePreview] = useState(null);
 
 
@@ -33,7 +33,7 @@ function ImageArea({ setImage, image, error }) {
             <IconX size="3.2rem" stroke={1.5} />
           </Dropzone.Reject>
           <Dropzone.Idle>
-            <IconPhoto size="5.2rem" stroke={1.5} />
+            <IconPhoto size="3.2rem" stroke={1.5} />
           </Dropzone.Idle>
 
           <div>
