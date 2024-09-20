@@ -1,7 +1,7 @@
-import { Stack, Button, Fieldset, Checkbox, NumberInput } from "@mantine/core";
-import classes from "./BrailleForm.module.css";
+import { Button, Checkbox, Fieldset, NumberInput, Stack } from "@mantine/core";
 import { useState } from "react";
-import ImageArea from "./ImageArea";
+import ImageDropzone from "../../components/ImageDropzone";
+import classes from "../Form.module.css";
 
 // @ts-ignore
 function BrailleForm({ setAsciiText }) {
@@ -140,10 +140,9 @@ function BrailleForm({ setAsciiText }) {
             label: classes.label,
           }}
         />
-        <ImageArea setImage={setImage} error={imageError} />
+        <ImageDropzone setImage={setImage} imageError={imageError} />
       </Fieldset>
       <Button onClick={handleSubmit}>Submit</Button>
-      
     </Stack>
   );
 }

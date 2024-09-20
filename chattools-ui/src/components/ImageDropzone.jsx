@@ -3,23 +3,23 @@ import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { IconPhoto, IconUpload, IconX } from "@tabler/icons-react";
 import { useState } from "react";
 
-function ImageArea({ setImage, error }) {
+function ImageDropzone({ setImage, imageError = null }) {
   const [imagePreview, setimagePreview] = useState(null);
-
 
   const handleDrop = (file) => {
     setimagePreview(URL.createObjectURL(file[0]));
     setImage(file[0]);
   };
+
   return (
     <>
       <Dropzone
-      style={{
-        borderColor: error ? 'red' : undefined,
-          borderWidth: error ? '2px' : undefined,
-          borderStyle: error ? 'solid' : undefined,
-      }}
-      mt="md"
+        style={{
+          borderColor: imageError ? 'red' : undefined,
+          borderWidth: imageError ? '2px' : undefined,
+          borderStyle: imageError ? 'solid' : undefined,
+        }}
+        mt="md"
         onDrop={handleDrop}
         accept={IMAGE_MIME_TYPE}
         maxFiles={1}
@@ -49,17 +49,18 @@ function ImageArea({ setImage, error }) {
 
       {imagePreview && (
         <Image
-        onClick={() => console.log("image prview clicked")}
+          onClick={() => console.log("image prview clicked")}
           src={imagePreview}
           alt="Preview"
           width={250}
           height={250}
           fit="contain"
           mt="md"
+          onLoad={() => URL.revokeObjectURL(imagePreview)}
         />
       )}
     </>
   );
 }
 
-export default ImageArea
+export default ImageDropzone
