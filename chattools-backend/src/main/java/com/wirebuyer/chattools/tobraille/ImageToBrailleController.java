@@ -1,4 +1,4 @@
-package com.wirebuyer.chattools.toBraille;
+package com.wirebuyer.chattools.tobraille;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +22,6 @@ public class ImageToBrailleController {
             @RequestPart(required = false) @Validated BrailleOptions brailleOptions,
             @RequestPart MultipartFile user_image)
     {
-        System.out.println("test");
         if (brailleOptions == null) { brailleOptions = new BrailleOptions(); }
         return imageToBrailleService.convertImage(user_image, brailleOptions);
     }

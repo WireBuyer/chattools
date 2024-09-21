@@ -1,4 +1,4 @@
-package com.wirebuyer.chattools.toBraille;
+package com.wirebuyer.chattools.tobraille;
 
 import org.imgscalr.Scalr;
 import org.springframework.stereotype.Service;

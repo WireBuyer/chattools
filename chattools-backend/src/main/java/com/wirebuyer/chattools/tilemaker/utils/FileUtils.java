@@ -1,4 +1,4 @@
-package com.wirebuyer.chattools.squareify.utils;
+package com.wirebuyer.chattools.tilemaker.utils;
 
 import org.apache.tika.detect.Detector;
 import org.apache.tika.io.TikaInputStream;

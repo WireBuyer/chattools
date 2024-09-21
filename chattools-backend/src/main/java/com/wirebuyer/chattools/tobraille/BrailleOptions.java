@@ -1,4 +1,4 @@
-package com.wirebuyer.chattools.toBraille;
+package com.wirebuyer.chattools.tobraille;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -29,7 +29,7 @@ public class BrailleOptions {
     private int threshold = 128;
 
     @JsonProperty("inverted")
-    private Boolean inverted = false;
+    private boolean inverted = false;
 
     public Integer getWidth() {
         return width;
@@ -47,7 +47,7 @@ public class BrailleOptions {
         return threshold;
     }
 
-    public Boolean isInverted() {
+    public boolean isInverted() {
         return inverted;
     }
 
