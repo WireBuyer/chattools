@@ -1,4 +1,4 @@
-package com.wirebuyer.chattools.squareify.contentStrategies;
+package com.wirebuyer.chattools.tilemaker.contentStrategies;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+// TODO: can probably avoid this class and keeping the base interface. make functions for the main loop
+//  in the loop can just make an abstract processTile command. same for resize. make everything use streams instead of
+//  the file to make it useable everywhere
 public abstract class CommandlineStrategy implements ContentStrategy {
     @Override
     public void processTiles(MultipartFile file, ZipOutputStream zos, int rows, int cols, boolean resize) throws IOException {
@@ -23,7 +26,6 @@ public abstract class CommandlineStrategy implements ContentStrategy {
         int tileHeight;
 
         InputStream is;
-        // TODO: add better resizing code here if resizing
         if (resize) {
             System.out.println("resizing");
             boolean roundDown = false;
@@ -54,14 +56,15 @@ public abstract class CommandlineStrategy implements ContentStrategy {
                 cropInputStream.transferTo(zos);
 
                 zos.closeEntry();
-                x += tileWidth;
                 is.reset();
+                x += tileWidth;
             }
             y += tileHeight;
         }
         is.close();
     }
 
+    // TODO: can move this out into the base interface
     private BufferedInputStream runProcess(InputStream is, List<String> command) throws IOException {
         ProcessBuilder pb = new ProcessBuilder(command);
         Process process = pb.start();

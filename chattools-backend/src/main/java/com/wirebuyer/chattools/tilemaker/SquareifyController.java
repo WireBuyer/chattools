@@ -1,11 +1,10 @@
-package com.wirebuyer.chattools.squareify;
+package com.wirebuyer.chattools.tilemaker;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
@@ -15,17 +14,22 @@ import java.nio.file.Path;
 
 @RestController
 @RequestMapping("/api/")
-public class squareifyController {
+public class SquareifyController {
 
     private final SquareifyService squareifyService;
 
-    public squareifyController(SquareifyService squareifyService) {
+    public SquareifyController(SquareifyService squareifyService) {
         this.squareifyService = squareifyService;
     }
 
     @PostMapping(value = "/squareify", produces = "application/zip")
-    public StreamingResponseBody squareify(MultipartFile file, HttpServletResponse response) throws IOException {
+    @CrossOrigin(origins = "*")
+    public StreamingResponseBody squareify(HttpServletResponse response,
+                                           @RequestPart MultipartFile file,
+                                           @RequestPart @Validated CropOptions cropOptions) throws IOException {
         // TODO: dynamic vars from request with validation
+        System.out.println("file is : " + file.getOriginalFilename() + " and size is: " + file.getSize());
+        System.out.println(cropOptions);
         int rows = 2;
         int cols = 2;
         Path zip = squareifyService.processFile(file, rows, cols, false);

@@ -1,4 +1,4 @@
-package com.wirebuyer.chattools.squareify.contentStrategies;
+package com.wirebuyer.chattools.tilemaker.contentStrategies;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Component;
