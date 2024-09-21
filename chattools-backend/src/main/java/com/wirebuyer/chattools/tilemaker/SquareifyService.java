@@ -1,7 +1,7 @@
-package com.wirebuyer.chattools.squareify;
+package com.wirebuyer.chattools.tilemaker;
 
-import com.wirebuyer.chattools.squareify.contentStrategies.ContentStrategy;
-import com.wirebuyer.chattools.squareify.utils.FileUtils;
+import com.wirebuyer.chattools.tilemaker.contentStrategies.ContentStrategy;
+import com.wirebuyer.chattools.tilemaker.utils.FileUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,6 +9,7 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,7 @@ public class SquareifyService {
         }
         ContentStrategy contentStrategy = getContentStrategy(filetype);
 
-        Path zip = Files.createTempFile(null, ".zip");
+        Path zip = Files.createTempFile(Paths.get("D:\\Media\\4chan\\gifs\\test_gifs"), null, ".zip");
         try (ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(Files.newOutputStream(zip)))) {
             contentStrategy.processTiles(file, zos, rows, cols, resize);
         }
