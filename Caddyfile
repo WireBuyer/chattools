@@ -1,13 +1,22 @@
 :80 {
+	@prod expression {env.CADDY_ENV} == "prod"
+	@dev expression {env.CADDY_ENV} == "dev"
+
 	handle /api/* {
-		reverse_proxy backend:8080
+		reverse_proxy @prod backend:8080
+		reverse_proxy @dev localhost:8080
 	}
 
 	handle /* {
-		root * /usr/share/caddy
-		file_server
-		try_files {path} /index.html
+		handle @prod {
+			root * /usr/share/caddy
+			file_server
+			try_files {path} /index.html
+		}
+		# vite dev server
+		handle @dev {
+			reverse_proxy localhost:5173
+		}
 	}
-
 	encode zstd gzip
 }
