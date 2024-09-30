@@ -20,6 +20,8 @@ services:
       - caddy-config:/config
       - caddy-data:/data
       - ./Caddyfile:/etc/caddy/Caddyfile
+    environment:
+      - CADDY_ENV=prod
 
 volumes:
   caddy-config:
