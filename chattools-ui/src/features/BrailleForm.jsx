@@ -1,7 +1,7 @@
 import { Button, Checkbox, Fieldset, NumberInput, Stack } from "@mantine/core";
 import { useState } from "react";
-import ImageDropzone from "../../components/ImageDropzone";
-import classes from "../Form.module.css";
+import classes from "./Form.module.css";
+import ImageDropzone from "../components/ImageDropzone";
 
 // @ts-ignore
 function BrailleForm({ setAsciiText }) {

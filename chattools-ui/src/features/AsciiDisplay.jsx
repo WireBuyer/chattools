@@ -32,7 +32,7 @@ function AsciiDisplay({ asciiText }) {
         padding: 0,
         overflow: 'auto',
         userSelect: 'text',
-        outline: 'none', // Remove focus outline if you don't want it
+        outline: 'none',
       }}
     >
       {asciiText}

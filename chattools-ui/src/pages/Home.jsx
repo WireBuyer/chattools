@@ -13,8 +13,8 @@ import {
   Center,
 } from "@mantine/core";
 import { useState } from "react";
-import AsciiDisplay from "../features/AsciiDisplay/AsciiDisplay";
-import BrailleForm from "../features/BrailleForm/BrailleForm";
+import AsciiDisplay from "../features/AsciiDisplay";
+import BrailleForm from "../features/BrailleForm";
 import { useClipboard } from "@mantine/hooks";
 
 function Home() {
@@ -26,8 +26,6 @@ function Home() {
 
   const [asciiText, setAsciiText] = useState("");
   const clipboard = useClipboard({ timeout: 1250 });
-
-
 
   return (
     <Flex
@@ -68,9 +66,7 @@ function Home() {
             </Button>
           </Group>
         </Center>
-
       </Stack>
-
     </Flex>
   );
 }
