@@ -22,9 +22,10 @@ public class SquareifyController {
         this.squareifyService = squareifyService;
     }
 
-    @PostMapping(value = "/squareify", produces = "application/zip")
+    // not exactly sure if i need the "application/zip" part but i'll keep it anyway
+    @PostMapping(value = "/tilemaker", produces = "application/zip")
     @CrossOrigin(origins = "*")
-    public StreamingResponseBody squareify(HttpServletResponse response,
+    public StreamingResponseBody tilemaker(HttpServletResponse response,
                                            @RequestPart MultipartFile file,
                                            @RequestPart @Validated CropOptions cropOptions) throws IOException {
         // TODO: dynamic vars from request with validation

@@ -10,8 +10,8 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useEffect, useState } from 'react';
-import ImageDropzone from '../../components/ImageDropzone';
-import classes from "../Form.module.css";
+import ImageDropzone from '../components/ImageDropzone';
+import classes from "./Form.module.css";
 
 function CropForm() {
   const [image, setImage] = useState(null);
@@ -96,7 +96,7 @@ function CropForm() {
 
     // TODO: add notification for error
     let filename = "";
-    fetch('/api/squareify', {
+    fetch('/api/tilemaker', {
       method: 'POST',
       body: formData
     })
