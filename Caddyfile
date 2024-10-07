@@ -1,4 +1,11 @@
 :80 {
+	# @skip path_regexp \.(js|css|png|jpe?g|gif|ico|woff|otf|ttf|eot|svg|txt|pdf|docx?|xlsx?)$
+	# log_skip @skip
+
+	# log {
+	# 	output file logs.json
+	# 	format json
+	# }
 	@prod expression {env.CADDY_ENV} == "prod"
 	@dev expression {env.CADDY_ENV} == "dev"
 
