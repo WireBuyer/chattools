@@ -9,7 +9,6 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,22 +28,23 @@ public class SquareifyService {
         }
     }
 
-    public Path processFile(MultipartFile file, int rows, int cols, boolean resize) throws IOException {
+    public Path processFile(MultipartFile file, CropOptions cropOptions) throws IOException {
         String filetype = FileUtils.getContentType(file);
-        System.out.println("type is: " + filetype);
         if (!contentStrategies.containsKey(filetype)) {
             throw new RuntimeException("doesn't support file type: " + filetype);
         }
         ContentStrategy contentStrategy = getContentStrategy(filetype);
 
-        Path zip = Files.createTempFile(Paths.get("D:\\Media\\4chan\\gifs\\test_gifs"), null, ".zip");
+        Path zip = Files.createTempFile(null, ".zip");
         try (ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(Files.newOutputStream(zip)))) {
-            contentStrategy.processTiles(file, zos, rows, cols, resize);
+            contentStrategy.processTiles(file, zos, cropOptions.getRows(), cropOptions.getCols(), cropOptions.isTrim(),
+                    cropOptions.isDownsize());
         }
 
         return zip;
     }
 
+    // TODO: we don't really need this function since we already do the test before. remove later
     private ContentStrategy getContentStrategy(String filetype) {
         ContentStrategy contentStrategy = contentStrategies.get(filetype);
         if (contentStrategy == null) {

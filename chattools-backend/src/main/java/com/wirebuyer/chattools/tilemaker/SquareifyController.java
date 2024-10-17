@@ -28,12 +28,9 @@ public class SquareifyController {
     public StreamingResponseBody tilemaker(HttpServletResponse response,
                                            @RequestPart MultipartFile file,
                                            @RequestPart @Validated CropOptions cropOptions) throws IOException {
-        // TODO: dynamic vars from request with validation
         System.out.println("file is : " + file.getOriginalFilename() + " and size is: " + file.getSize());
         System.out.println(cropOptions);
-        int rows = 2;
-        int cols = 2;
-        Path zip = squareifyService.processFile(file, rows, cols, false);
+        Path zip = squareifyService.processFile(file, cropOptions);
 
         String filename = FilenameUtils.removeExtension(file.getOriginalFilename()) + ".zip";
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);

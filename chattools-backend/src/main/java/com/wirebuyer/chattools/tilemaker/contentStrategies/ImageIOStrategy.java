@@ -14,7 +14,7 @@ import java.util.zip.ZipOutputStream;
 @Component
 public class ImageIOStrategy implements ContentStrategy {
     @Override
-    public void processTiles(MultipartFile file, ZipOutputStream zos, int rows, int cols, boolean resize) throws IOException {
+    public void processTiles(MultipartFile file, ZipOutputStream zos, int rows, int cols, boolean isTrim, boolean isDownsize) throws IOException {
         // TODO: add resize code to this
         // determine tile sizes
         BufferedImage image = ImageIO.read(file.getInputStream());
