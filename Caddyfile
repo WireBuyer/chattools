@@ -1,4 +1,4 @@
-:80 {
+{$DOMAIN_NAME:localhost} {
 	# @skip path_regexp \.(js|css|png|jpe?g|gif|ico|woff|otf|ttf|eot|svg|txt|pdf|docx?|xlsx?)$
 	# log_skip @skip
 
@@ -6,6 +6,8 @@
 	# 	output file logs.json
 	# 	format json
 	# }
+	encode zstd gzip
+
 	@prod expression {env.CADDY_ENV} == "prod"
 	@dev expression {env.CADDY_ENV} == "dev"
 
@@ -25,5 +27,4 @@
 			reverse_proxy localhost:5173
 		}
 	}
-	encode zstd gzip
 }
