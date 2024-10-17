@@ -17,7 +17,8 @@ import java.util.zip.ZipOutputStream;
 //  the file to make it useable everywhere
 public abstract class CommandlineStrategy implements ContentStrategy {
     @Override
-    public void processTiles(MultipartFile file, ZipOutputStream zos, int rows, int cols, boolean resize) throws IOException {
+    public void processTiles(MultipartFile file, ZipOutputStream zos,
+                             int rows, int cols, boolean isTrim, boolean isDownsize) throws IOException {
         // TODO: to be moved to an abstract function later for other formats which have other ways of finding sizes
         BufferedImage image = ImageIO.read(file.getInputStream());
         int width = image.getWidth();
@@ -26,20 +27,18 @@ public abstract class CommandlineStrategy implements ContentStrategy {
         int tileHeight;
 
         InputStream is;
-        if (resize) {
-            System.out.println("resizing");
-            boolean roundDown = false;
-            int newX = roundDimension(width, cols, roundDown);
-            int newY = roundDimension(height, rows, roundDown);
-            System.out.println("newX: " + newX);
-            System.out.println("newY: " + newY);
-            is = runProcess(file.getInputStream(), buildResizeCommand(newX, newY));
-            tileWidth = newX / cols;
-            tileHeight = newY / rows;
-        } else {
+        if (isTrim) {
             is = new BufferedInputStream(file.getInputStream());
             tileWidth = width / cols;
             tileHeight = height / rows;
+        }
+        else {
+            int newX = roundDimension(width, cols, isDownsize);
+            int newY = roundDimension(height, rows, isDownsize);
+
+            is = runProcess(file.getInputStream(), buildResizeCommand(newX, newY));
+            tileWidth = newX / cols;
+            tileHeight = newY / rows;
         }
 
         int y = 0;
@@ -51,9 +50,11 @@ public abstract class CommandlineStrategy implements ContentStrategy {
                 String filename = FilenameUtils.removeExtension(file.getOriginalFilename());
                 zos.putNextEntry(new ZipEntry(filename + value + this.getTypeExtension()));
 
+                // TODO: consider changing this from MAX_VALUE to a more appropriate value
                 is.mark(Integer.MAX_VALUE);
-                BufferedInputStream cropInputStream = runProcess(is, buildCropCommand(x, y, tileWidth, tileHeight));
-                cropInputStream.transferTo(zos);
+                try (BufferedInputStream cropInputStream = runProcess(is, buildCropCommand(x, y, tileWidth, tileHeight))) {
+                    cropInputStream.transferTo(zos);
+                }
 
                 zos.closeEntry();
                 is.reset();
@@ -72,7 +73,9 @@ public abstract class CommandlineStrategy implements ContentStrategy {
             // transfer the file to stdin of the process
             is.transferTo(processOutputStream);
         }
+
         return new BufferedInputStream(process.getInputStream()) {
+            // do all of this to ensure the process is closed too
             private final Process p = process;
 
             @Override
@@ -97,7 +100,8 @@ public abstract class CommandlineStrategy implements ContentStrategy {
         int value;
         if (roundDown) {
             value = slices * (dimensionSize / slices);
-        } else {
+        }
+        else {
             value = slices * ((dimensionSize + slices - 1) / slices);
         }
 
@@ -105,7 +109,6 @@ public abstract class CommandlineStrategy implements ContentStrategy {
         if (value < slices) {
             value = slices;
         }
-
         return value;
     }
 

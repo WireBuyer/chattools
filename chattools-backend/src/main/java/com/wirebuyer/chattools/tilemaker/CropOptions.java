@@ -40,11 +40,15 @@ public class CropOptions {
         return rows;
     }
 
-    public void setRows(@Min(value = 1, message = "Value must be a positive value") @Max(value = 7, message = "Value must be less than 8") int rows) {
-        this.rows = rows;
-    }
-
     public int getCols() {
         return cols;
+    }
+
+    public boolean isTrim() {
+        return isTrim;
+    }
+
+    public boolean isDownsize() {
+        return isDownsize;
     }
 }
