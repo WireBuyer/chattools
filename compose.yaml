@@ -23,7 +23,8 @@ services:
       - caddy-data:/data
       - ./Caddyfile:/etc/caddy/Caddyfile
     environment:
-      - CADDY_ENV=prod
+      - CADDY_ENV=dev
+      - DOMAIN_NAME=${DOMAIN_NAME}
 
 volumes:
   caddy-config:
