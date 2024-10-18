@@ -1,12 +1,14 @@
-import { ActionIcon, AppShell, Button, Group, Loader, Text, useMantineColorScheme, useMantineTheme } from '@mantine/core';
+import { ActionIcon, AppShell, Group, Text, useMantineColorScheme, useMantineTheme } from '@mantine/core';
 import "@mantine/core/styles.css";
 import { IconMoon, IconSun } from "@tabler/icons-react";
+import { lazy, Suspense } from 'react';
 import { Link, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import Home from './pages/Home';
-import { NotFoundPage } from "./pages/NotFound";
-import Test from './pages/Test';
-import TileMaker from './pages/TileMaker';
 import LoginArea from './features/LoginArea';
+
+const BrailleConverter = lazy(() => import('./pages/BrailleConverter'));
+const TileMaker = lazy(() => import('./pages/TileMaker'));
+const Test = lazy(() => import('./pages/Test'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 export default function App() {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
@@ -38,13 +40,15 @@ export default function App() {
         </AppShell.Header>
 
         <AppShell.Main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="TileMaker" element={<TileMaker />} />
-            <Route path="test" element={<Test />} />
-            <Route path="*" element={<NotFoundPage />} />
-            
-          </Routes>
+          {/* TODO: use a data router to take advantage of 6.4's api, namely lazy in place of element for lazy loading */}
+          <Suspense>
+            <Routes>
+              <Route path="/" element={<BrailleConverter />} />
+              <Route path="tilemaker" element={<TileMaker />} />
+              <Route path="test" element={<Test />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
         </AppShell.Main>
       </AppShell>
     </Router>

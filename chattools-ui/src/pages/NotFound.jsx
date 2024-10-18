@@ -1,7 +1,9 @@
 import { Center } from "@mantine/core";
 
-export function NotFoundPage() {
-  return <Center style={{height: "100vh"}}>
+function NotFound() {
+  return <Center style={{ height: "calc(100vh - 60px)" }}>
     404
   </Center>;
 }
+
+export default NotFound;
