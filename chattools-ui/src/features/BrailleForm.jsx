@@ -24,6 +24,7 @@ function BrailleForm({ setAsciiText }) {
       height: height === "" ? null : height,
       threshold: threshold === "" ? null : threshold,
       inverted: inverted,
+      // save: true
     };
     formData.append("user_image", image);
     formData.append(
@@ -32,7 +33,6 @@ function BrailleForm({ setAsciiText }) {
         type: "application/json",
       })
     );
-    console.log(brailleOptions)
 
     fetch('/api/brailleConverter', {
       method: 'POST',
@@ -40,7 +40,6 @@ function BrailleForm({ setAsciiText }) {
     })
       .then((response) => {
         if (response.ok) {
-          console.log("ok!")
           return response.text();
         }
         throw new Error("error!!!");

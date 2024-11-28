@@ -1,28 +1,51 @@
 package com.wirebuyer.chattools.tobraille;
 
+import com.wirebuyer.chattools.security.User;
+import com.wirebuyer.chattools.security.UserRepository;
 import org.imgscalr.Scalr;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ImageToBrailleService {
+
+    private final UserRepository userRepository;
+    private final AsciiRepository asciiRepository;
+
+    public ImageToBrailleService(AsciiRepository asciiRepository, UserRepository userRepository) {
+        this.asciiRepository = asciiRepository;
+        this.userRepository = userRepository;
+    }
+
 
     /* TODO:
         - add custom exception here for image in case it is invalid. use the correct status code with description
         potentially add ability to make a request and retrieve an image from an external source.
         - add dithering options
      */
-    public String convertImage(MultipartFile user_image, BrailleOptions brailleOptions) {
+    public String convertImage(MultipartFile user_image, BrailleOptions brailleOptions, OidcUser principal) {
         BufferedImage img;
       /*  TODO:
             - add a check to see if image is null. see how to throw it and provide a meaningful error
             - currently does not support webp for example so it shows up as null. learn more
        */
+        if (brailleOptions.isSave() && principal == null) {
+            throw new AuthenticationCredentialsNotFoundException("Not logged in");
+        }
+
         try {
             img = ImageIO.read(user_image.getInputStream());
         } catch (IOException e) {
@@ -33,8 +56,41 @@ public class ImageToBrailleService {
         img =  resize(img, brailleOptions);
         to_grayscale(img);
 
-        return to_braille(img, brailleOptions);
+        String res = to_braille(img, brailleOptions);
+
+        // since we checked for auth status before even reading the image this will work here without checking again
+        if (brailleOptions.isSave()) {
+            User user = userRepository.findByProviderId(principal.getSubject()).get();
+
+            long count = asciiRepository.countByUser(user);
+            if (count > 30) {
+                throw new IllegalStateException("Too many saved (limit: 30)");
+            }
+
+            try {
+                Ascii ascii = new Ascii();
+                ascii.setContent(res);
+                ascii.setUser(user);
+                asciiRepository.save(ascii);
+            } catch (DataIntegrityViolationException e) {
+                throw new IllegalStateException("Ascii already exists!");
+            }
+        }
+
+        return res;
     }
+
+    public Page<AsciiDto> getAscii(String subject, Pageable pageable) {
+        User user = userRepository.findByProviderId(subject).get();
+        return asciiRepository.findByUser(user, pageable).map(AsciiDto::toDto);
+    }
+
+    @Transactional
+    public void deleteAsciis(String subject, List<UUID> ids) {
+        User user = userRepository.findByProviderId(subject).get();
+        asciiRepository.deleteByUserAndIdIn(user, ids);
+    }
+
 
     /* TODO:
         make this function do the resizing and pad checking in 1 go instead of 2. Calculate the dimensions in the
@@ -71,7 +127,7 @@ public class ImageToBrailleService {
         return image;
     }
 
-    public static void to_grayscale(BufferedImage image) {
+    private static void to_grayscale(BufferedImage image) {
         int height = image.getHeight();
         int width = image.getWidth();
 
@@ -90,7 +146,7 @@ public class ImageToBrailleService {
         }
     }
 
-    public static String to_braille(BufferedImage image, BrailleOptions brailleOptions) {
+    private static String to_braille(BufferedImage image, BrailleOptions brailleOptions) {
         // offset for each char in the braille block. Add all offsets then convert to a char to get its shape
         final int[][] BRAILLE_DOT_OFFSETS = {
                 {0x1, 0x8},

@@ -22,11 +22,17 @@ import org.springframework.web.filter.ForwardedHeaderFilter;
 public class SecurityConfig {
 
     private final ClientRegistrationRepository clientRegistrationRepository;
+    // decided to not use this, but keeping anyway for reference
     private final AuthenticationSuccessHandler OAuth2LoginSuccessHandler;
+    private final CustomOidcUserService customOidcUserService;
 
-    public SecurityConfig(ClientRegistrationRepository clientRegistrationRepository, AuthenticationSuccessHandler oAuth2LoginSuccessHandler) {
+
+    public SecurityConfig(ClientRegistrationRepository clientRegistrationRepository,
+                          CustomOidcUserService customOidcUserService,
+                          OAuth2LoginSuccessHandler OAuth2LoginSuccessHandler) {
         this.clientRegistrationRepository = clientRegistrationRepository;
-        this.OAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
+        this.OAuth2LoginSuccessHandler = OAuth2LoginSuccessHandler;
+        this.customOidcUserService = customOidcUserService;
     }
 
     @Bean
@@ -52,11 +58,17 @@ public class SecurityConfig {
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .authorizationEndpoint(authorization -> authorization
-                                .authorizationRequestResolver(authorizationRequestResolver(this.clientRegistrationRepository)))
+                                .authorizationRequestResolver(authorizationRequestResolver(this.clientRegistrationRepository))
+                        )
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .oidcUserService(customOidcUserService)
+                        )
                         .redirectionEndpoint(redirection -> redirection
-                                .baseUri("/api/login/oauth2/callback/*"))
+                                .baseUri("/api/login/oauth2/callback/*")
+                        )
+
                         .defaultSuccessUrl("/")
-                        .successHandler(OAuth2LoginSuccessHandler)
+//                        .successHandler(OAuth2LoginSuccessHandler)
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 

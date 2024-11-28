@@ -31,6 +31,10 @@ public class BrailleOptions {
     @JsonProperty("inverted")
     private boolean inverted = false;
 
+    @JsonProperty("save")
+    @JsonSetter(nulls = Nulls.SKIP)
+    private boolean save = false;
+
     public Integer getWidth() {
         return width;
     }
@@ -51,6 +55,8 @@ public class BrailleOptions {
         return inverted;
     }
 
+    public boolean isSave() { return save; }
+
     @Override
     public String toString() {
         return "BrailleOptions{" +
@@ -58,6 +64,8 @@ public class BrailleOptions {
                 ", height=" + height +
                 ", threshold=" + threshold +
                 ", inverted=" + inverted +
+                ", save=" + save +
                 '}';
     }
+
 }

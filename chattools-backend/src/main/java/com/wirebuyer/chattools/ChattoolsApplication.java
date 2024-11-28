@@ -2,8 +2,10 @@ package com.wirebuyer.chattools;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 
 @SpringBootApplication
+@EnableSpringDataWebSupport(pageSerializationMode = EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO)
 public class ChattoolsApplication {
     /* TODO:
         add better support for transparency
@@ -21,7 +23,6 @@ public class ChattoolsApplication {
         add tests
      */
     public static void main(String[] args) {
-        System.out.println(System.getProperty("java.version"));
         SpringApplication.run(ChattoolsApplication.class, args);
     }
 

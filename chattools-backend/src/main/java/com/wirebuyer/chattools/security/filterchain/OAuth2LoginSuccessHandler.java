@@ -32,7 +32,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         // create users if they don't exist or update their name if it was changed
         userRepository.findByProviderId(provider_id).ifPresentOrElse(
                 exisitingUser -> {
-                    System.out.println("User found: " + exisitingUser);
                     if (!exisitingUser.getUsername().equals(username)) {
                         exisitingUser.setUsername(username);
                         userRepository.save(exisitingUser);
@@ -43,7 +42,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                     user.setProviderId(provider_id);
                     user.setUsername(username);
                     userRepository.save(user);
-                    System.out.println("User added: " + user);
                 }
         );
 

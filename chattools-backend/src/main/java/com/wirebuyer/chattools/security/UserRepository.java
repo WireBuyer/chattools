@@ -8,5 +8,5 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
 
-    Optional<User> findByProviderId(String twitchId);
+    Optional<User> findByProviderId(String providerId);
 }
