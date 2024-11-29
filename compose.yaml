@@ -5,8 +5,26 @@ services:
       context: ./chattools-backend
     ports:
       - 8080:8080
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/chattools_db
+      - SPRING_DATASOURCE_USERNAME=test
+      - SPRING_DATASOURCE_PASSWORD=test
     env_file:
       - ./chattools-backend/.env
+    depends_on:
+      - db
+    
+  db:
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=chattools_db
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test
+    volumes:
+      - chattools_db:/var/lib/postgresql/data
+    
   
   caddy:
     build:
@@ -29,3 +47,4 @@ services:
 volumes:
   caddy-config:
   caddy-data:
+  chattools_db:
