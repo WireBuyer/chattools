@@ -20,8 +20,8 @@ services:
       - 5432:5432
     environment:
       - POSTGRES_DB=chattools_db
-      - POSTGRES_USER=test
-      - POSTGRES_PASSWORD=test
+      - POSTGRES_USER=${CHATTOOLS_DB_USER}
+      - POSTGRES_PASSWORD=${CHATTOOLS_DB_PASSWORD}
     volumes:
       - chattools_db:/var/lib/postgresql/data
     
