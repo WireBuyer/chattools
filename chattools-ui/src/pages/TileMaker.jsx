@@ -1,5 +1,5 @@
-import { Center } from '@mantine/core';
-import CropForm from '../features/CropForm';
+import { Center } from "@mantine/core";
+import CropForm from "../features/CropForm";
 
 function TileMaker() {
   return (
