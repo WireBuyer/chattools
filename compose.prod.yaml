@@ -1,0 +1,34 @@
+# add logging and health check
+services:
+  backend:
+    image: osakasfavoritedev/chattools-backend:latest
+    pull_policy: always
+    restart: unless-stopped
+    expose:
+      - 8080
+    environment:
+      - SPRING_DATASOURCE_USERNAME=${CHATTOOLS_DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${CHATTOOLS_DB_PASSWORD}
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+          cpus: "0.8"
+
+  db:
+    # set a version later
+    # image: postgres:latest
+    expose:
+      - 5432
+
+  frontend:
+    image: osakasfavoritedev/chattools-frontend:latest
+    pull_policy: always
+    restart: unless-stopped
+    expose:
+      - 5173
+
+volumes:
+  caddy-config:
+  caddy-data:
+  chattools_db:

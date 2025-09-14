@@ -1,50 +1,38 @@
 # add logging and health check
 services:
   backend:
-    build:
-      context: ./chattools-backend
-    ports:
-      - 8080:8080
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/chattools_db
-      - SPRING_DATASOURCE_USERNAME=test
-      - SPRING_DATASOURCE_PASSWORD=test
+      - SPRING_DATASOURCE_USERNAME=REPLACE
+      - SPRING_DATASOURCE_PASSWORD=REPLACE
     env_file:
       - ./chattools-backend/.env
     depends_on:
       - db
-    
+    networks:
+      - caddy-network
+
   db:
     image: postgres:latest
-    ports:
-      - 5432:5432
     environment:
       - POSTGRES_DB=chattools_db
       - POSTGRES_USER=${CHATTOOLS_DB_USER}
       - POSTGRES_PASSWORD=${CHATTOOLS_DB_PASSWORD}
     volumes:
       - chattools_db:/var/lib/postgresql/data
-    
-  
-  caddy:
-    build:
-      context: .
-    restart: unless-stopped
-    cap_add:
-      - NET_ADMIN
-    ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
-    volumes:
-      - caddy-config:/config
-      - caddy-data:/data
-      - ./Caddyfile:/etc/caddy/Caddyfile
-    environment:
-      - CADDY_ENV=prod
-      - DOMAIN_NAME=${DOMAIN_NAME}
+
+  frontend:
+    # ports:
+    #   - "5173:5173"
+    networks:
+      - caddy-network
 
 volumes:
   caddy-config:
   caddy-data:
   chattools_db:
+
+networks:
+  caddy-network:
+    name: caddy-network
+    external: true
