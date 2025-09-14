@@ -9,6 +9,7 @@ services:
       - ./chattools-backend/.env
     depends_on:
       - db
+    container_name: chattools-backend
     networks:
       - caddy-network
 
@@ -24,6 +25,7 @@ services:
   frontend:
     # ports:
     #   - "5173:5173"
+    container_name: chattools-frontend
     networks:
       - caddy-network
 
