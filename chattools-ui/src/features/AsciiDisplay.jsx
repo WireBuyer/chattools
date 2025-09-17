@@ -4,7 +4,7 @@ function AsciiDisplay({ asciiText }) {
   const textRef = useRef(null);
 
   const handleKeyDown = useCallback((event) => {
-    if (event.ctrlKey && event.key === 'a') {
+    if (event.ctrlKey && event.key === "a") {
       event.preventDefault();
 
       const range = document.createRange();
@@ -22,9 +22,10 @@ function AsciiDisplay({ asciiText }) {
       tabIndex={0}
       onKeyDown={handleKeyDown}
       style={{
-        fontFamily: 'monospace',
-        display: 'inline-block',
-        userSelect: 'text',
+        fontFamily: "monospace",
+        display: "inline-block",
+        userSelect: "text",
+        whiteSpace: "pre",
       }}
     >
       {asciiText}
