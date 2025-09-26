@@ -23,15 +23,11 @@ services:
       - chattools_db:/var/lib/postgresql/data
 
   frontend:
-    # ports:
-    #   - "5173:5173"
     container_name: chattools-frontend
     networks:
       - caddy-network
 
 volumes:
-  caddy-config:
-  caddy-data:
   chattools_db:
 
 networks:
