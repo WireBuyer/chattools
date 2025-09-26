@@ -11,11 +11,6 @@ default:
 dev:
     docker compose -f compose.yaml -f compose.dev.yaml up --watch
 
-# Build for both the frontend and backend 
-build-both:
-    build-frontend
-    build-backend
-
 # Pull latest and start prod containers
 prod:
     docker compose -f compose.yaml -f compose.prod.yaml pull
@@ -23,7 +18,7 @@ prod:
 
 # Build the frontend for arm64 and amd64 then push both  
 build-frontend:
-    cd {{project}}-ui && 
+    cd {{project}}-ui && \
     docker buildx build \
         --platform linux/amd64,linux/arm64 \
         -t {{user}}/{{project}}-frontend:{{git_hash}} \
@@ -34,3 +29,6 @@ build-frontend:
 build-backend:
     cd {{project}}-backend && mvn jib:build -Djib.to.tags=latest,{{git_hash}}
 
+# Build for both the frontend and backend 
+build-both: build-frontend build-backend
+    echo "Building and pushing both"

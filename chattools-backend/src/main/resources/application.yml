@@ -28,7 +28,7 @@ spring:
             issuer-uri: https://id.twitch.tv/oauth2
 
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/chattools}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/chattools_db}
     username: ${SPRING_DATASOURCE_USERNAME:test}
     password: ${SPRING_DATASOURCE_PASSWORD:test}
   jpa:
@@ -39,7 +39,6 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   config:
     import: optional:file:.env[.properties]
-
 #debug: true
 #logging:
 #  level:
