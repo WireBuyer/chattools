@@ -46,7 +46,7 @@ jobs:
       - name: Build and push with jib
         run: |
           cd chattools-backend 
-          mvn jib:build -Djib.to.tags=latest,${{ needs.init.outputs.hash }}
+          mvn compile jib:build -Djib.to.tags=latest,${{ needs.init.outputs.hash }}
 
   frontend:
     needs: init
