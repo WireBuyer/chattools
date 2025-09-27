@@ -26,4 +26,8 @@ public class ChattoolsApplication {
         SpringApplication.run(ChattoolsApplication.class, args);
     }
 
+    public void test() {
+        System.out.println("test");
+    }
+
 }
