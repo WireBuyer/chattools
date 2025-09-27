@@ -25,9 +25,4 @@ public class ChattoolsApplication {
     public static void main(String[] args) {
         SpringApplication.run(ChattoolsApplication.class, args);
     }
-
-    public void test() {
-        System.out.println("speed check");
-    }
-
 }
