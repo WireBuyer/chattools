@@ -27,7 +27,7 @@ public class ChattoolsApplication {
     }
 
     public void test() {
-        System.out.println("test change");
+        System.out.println("speed check");
     }
 
 }
