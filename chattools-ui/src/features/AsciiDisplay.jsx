@@ -2,6 +2,7 @@ import { useCallback, useRef } from "react";
 
 function AsciiDisplay({ asciiText }) {
   const textRef = useRef(null);
+  console.log("test change again");
 
   const handleKeyDown = useCallback((event) => {
     if (event.ctrlKey && event.key === "a") {
