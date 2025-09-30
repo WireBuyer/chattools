@@ -48,13 +48,39 @@ jobs:
           cd chattools-backend 
           mvn compile jib:build -Djib.to.tags=latest,${{ needs.init.outputs.hash }}
 
+  # multi-platform step
+  # frontend:
+  #   needs: init
+  #   if: ${{ needs.init.outputs.frontend == 'true' }}
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v5
+  #     - uses: docker/setup-qemu-action@v3
+  #     - uses: docker/setup-buildx-action@v3
+  #     - uses: docker/login-action@v3
+  #       with:
+  #         username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #         password: ${{ secrets.DOCKERHUB_TOKEN }}
+  #     - name: Build and push frontend
+  #       uses: docker/build-push-action@v6
+  #       with:
+  #         context: ./chattools-ui
+  #         platforms: linux/amd64,linux/arm64
+  #         push: true
+  #         tags: |
+  #           ${{ secrets.DOCKERHUB_USERNAME }}/chattools-ui:latest
+  #           ${{ secrets.DOCKERHUB_USERNAME }}/chattools-ui:${{ needs.init.outputs.hash }}
+  #         cache-from: type=gha
+  #         cache-to: type=gha,mode=max
+
+  # building only for arm64 to speed it up
   frontend:
     needs: init
     if: ${{ needs.init.outputs.frontend == 'true' }}
-    runs-on: ubuntu-latest
+    # change to ubuntu-latest for amd64
+    runs-on: ubuntu-24.04-arm
     steps:
       - uses: actions/checkout@v5
-      - uses: docker/setup-qemu-action@v3
       - uses: docker/setup-buildx-action@v3
       - uses: docker/login-action@v3
         with:
@@ -64,7 +90,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./chattools-ui
-          platforms: linux/amd64,linux/arm64
+          # change to linux/amd64 for amd64
+          platforms: linux/arm64
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/chattools-ui:latest
