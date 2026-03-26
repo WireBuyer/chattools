@@ -20,7 +20,7 @@ services:
       - POSTGRES_USER=${CHATTOOLS_DB_USER}
       - POSTGRES_PASSWORD=${CHATTOOLS_DB_PASSWORD}
     volumes:
-      - chattools_db:/var/lib/postgresql/data
+      - chattools_db:/var/lib/postgresql
 
   frontend:
     container_name: chattools-frontend
