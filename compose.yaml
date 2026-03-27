@@ -12,6 +12,7 @@ services:
     container_name: chattools-backend
     networks:
       - caddy-network
+      - default
 
   db:
     image: postgres:latest

@@ -18,6 +18,8 @@ services:
   db:
     # set a version later
     # image: postgres:latest
+    networks:
+      - default
     expose:
       - 5432
 
