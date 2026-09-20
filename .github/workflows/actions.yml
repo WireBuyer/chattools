@@ -94,7 +94,7 @@ jobs:
           platforms: linux/arm64
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/chattools-ui:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/chattools-ui:${{ needs.init.outputs.hash }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/chattools-frontend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/chattools-frontend:${{ needs.init.outputs.hash }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
