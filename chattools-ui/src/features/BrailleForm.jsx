@@ -9,6 +9,8 @@ function BrailleForm({ setAsciiText }) {
   const [height, setHeight] = useState("");
   const [threshold, setThreshold] = useState("");
   const [inverted, setInverted] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [save, setSave] = useState(false);
   const [image, setImage] = useState(null);
   const [imageError, setImageError] = useState(false);
 
@@ -19,24 +21,17 @@ function BrailleForm({ setAsciiText }) {
     }
 
     const formData = new FormData();
-    const brailleOptions = {
-      width: width === "" ? null : width,
-      height: height === "" ? null : height,
-      threshold: threshold === "" ? null : threshold,
-      inverted: inverted,
-      // save: true
-    };
-    formData.append("user_image", image);
-    formData.append(
-      "brailleOptions",
-      new Blob([JSON.stringify(brailleOptions)], {
-        type: "application/json",
-      })
-    );
+    formData.append("image", image);
 
-    fetch('/api/brailleConverter', {
-      method: 'POST',
-      body: formData
+    if (width !== "") formData.append("width", String(width));
+    if (height !== "") formData.append("height", String(height));
+    if (threshold !== "") formData.append("threshold", String(threshold));
+    formData.append("inverted", String(inverted));
+    formData.append("save", String(save));
+
+    fetch("/api/brailleConverter", {
+      method: "POST",
+      body: formData,
     })
       .then((response) => {
         if (response.ok) {
@@ -49,16 +44,13 @@ function BrailleForm({ setAsciiText }) {
         setImageError(false);
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
         setImageError(true);
       });
   };
 
   return (
-    <Stack
-      justify="space-between"
-      h="100%"
-    >
+    <Stack justify="space-between" h="100%">
       <Fieldset variant="unstyled">
         <NumberInput
           label="Width"
@@ -98,7 +90,9 @@ function BrailleForm({ setAsciiText }) {
           onChange={setHeight}
           onBlur={() =>
             // @ts-ignore
-            height === "" ? setHeight("") : setHeight(Math.round(height / 2) * 2)
+            height === ""
+              ? setHeight("")
+              : setHeight(Math.round(height / 2) * 2)
           }
           allowDecimal={false}
           classNames={{

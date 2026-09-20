@@ -28,57 +28,44 @@ This currently uses port 80 for the web server and port 8080 for the backend tha
 POST /api/brailleConverter
 ```
 Content-Type: `multipart/form-data`
-| Parameter        | Description                |
-| :--------------- | :------------------------- |
-| `user_image`     | **Required.** The image to upload  |
-| `brailleOptions` | (Optional) Parameters to apply  |
+| Parameter   | Description |
+| :---------- | :---------- |
+| `image`     | **Required.** The image to upload |
+| `width`     | Optional integer from 2 to 650 |
+| `height`    | Optional integer from 2 to 650 |
+| `threshold` | Optional integer from 0 to 255. Defaults to 128 |
+| `inverted`  | Optional boolean indicating whether the image colors should be inverted. Defaults to false |
 
 
-brailleOptions:
-A JSON object that can contain any combination of parameters. If one dimension is provided it will scale the other following the image aspect ratio. If none are provided a default width of 60 is provided. This must be set with its own `application/json` header (example below).
-
-
-- **width**: Integer 0 and 5000.
-- **height**: Integer 0 and 5000.
-- **threshold**: Integer between 0 and 255. Defines the value at which a dot is set.
-- **inverted**: A boolean indicating whether the image colors should be inverted.
-
-
-```json
-"brailleOptions": {
-    "width": 60,
-    "height": 60,
-    "threshold": 128,
-    "inverted": true
-}
-```
+Options are sent as regular multipart form fields. If one dimension is provided it will scale the other following the image aspect ratio. If neither dimension is provided, a default width of 60 is used. Omit optional fields to use their defaults.
 
 
 Examples:
 ```python
 import os
-
 import requests
 
 url = 'http://localhost:8080/api/brailleConverter'
 image_filename = 'img.png'
 
-user_image = open(os.path.join(os.getcwd(), image_filename), 'rb')
-brailleOptions = {
-    'width': 72,
-    'inverted': True
-}
-files = {
-    'user_image': user_image,
-    'brailleOptions': (None, json.dumps(brailleOptions), 'application/json')
+data = {
+    'width': '150',
+    'height': '100',
+    'threshold': '150',
+    'inverted': 'true'
 }
 
-response = requests.post(url, files=files)
+with open(os.path.join(os.getcwd(), image_filename), 'rb') as image:
+    files = {'image': image}
+    response = requests.post(url, files=files, data=data)
+
 print(response.text)
 ```
 
 ```bash
 curl --location 'http://localhost:8080/api/brailleConverter' \
---form 'user_image=@./img.png' \
---form 'brailleOptions={"height":"100","width":"150","threshold":"150"};type=application/json'
+--form 'image=@./img.png' \
+--form 'height=100' \
+--form 'width=150' \
+--form 'threshold=150'
 ```

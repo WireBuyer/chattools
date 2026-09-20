@@ -1,38 +1,24 @@
 package com.wirebuyer.chattools.tobraille;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.annotation.Nulls;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class BrailleOptions {
 
-
-    @JsonProperty("width")
-    @Min(value = 1, message = "Value must be a positive value")
-    @Max(value = 4000, message = "Value must be less than 4000")
+    @Min(value = 2, message = "Value must be at least 2")
+    @Max(value = 650, message = "Value must be less than or equal to 650")
     private Integer width = null;
 
-    @JsonProperty("height")
-    @Min(value = 1, message = "Value must be a positive value")
-    @Max(value = 4000, message = "Value must be less than 4000")
+    @Min(value = 2, message = "Value must be at least 2")
+    @Max(value = 650, message = "Value must be less than or equal to 650")
     private Integer height = null;
 
-    @JsonProperty("threshold")
-    @JsonSetter(nulls = Nulls.SKIP)
     @Min(value = 0, message = "Value must be between 0 and 255")
     @Max(value = 255, message = "Value must be between 0 and 255")
     private int threshold = 128;
 
-    @JsonProperty("inverted")
     private boolean inverted = false;
 
-    @JsonProperty("save")
-    @JsonSetter(nulls = Nulls.SKIP)
     private boolean save = false;
 
     public Integer getWidth() {
@@ -47,15 +33,33 @@ public class BrailleOptions {
         return height;
     }
 
+    public void setHeight(Integer height) {
+        this.height = height;
+    }
+
     public int getThreshold() {
         return threshold;
+    }
+
+    public void setThreshold(int threshold) {
+        this.threshold = threshold;
     }
 
     public boolean isInverted() {
         return inverted;
     }
 
-    public boolean isSave() { return save; }
+    public void setInverted(boolean inverted) {
+        this.inverted = inverted;
+    }
+
+    public boolean isSave() {
+        return save;
+    }
+
+    public void setSave(boolean save) {
+        this.save = save;
+    }
 
     @Override
     public String toString() {
@@ -67,5 +71,4 @@ public class BrailleOptions {
                 ", save=" + save +
                 '}';
     }
-
 }
