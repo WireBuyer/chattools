@@ -28,8 +28,6 @@ public class SquareifyController {
     public StreamingResponseBody tilemaker(HttpServletResponse response,
                                            @RequestPart MultipartFile file,
                                            @RequestPart @Validated CropOptions cropOptions) throws IOException {
-        System.out.println("file is : " + file.getOriginalFilename() + " and size is: " + file.getSize());
-        System.out.println(cropOptions);
         Path zip = squareifyService.processFile(file, cropOptions);
 
         String filename = FilenameUtils.removeExtension(file.getOriginalFilename()) + ".zip";
