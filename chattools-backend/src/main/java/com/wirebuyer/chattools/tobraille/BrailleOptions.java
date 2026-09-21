@@ -19,8 +19,6 @@ public class BrailleOptions {
 
     private boolean inverted = false;
 
-    private boolean save = false;
-
     public Integer getWidth() {
         return width;
     }
@@ -53,14 +51,6 @@ public class BrailleOptions {
         this.inverted = inverted;
     }
 
-    public boolean isSave() {
-        return save;
-    }
-
-    public void setSave(boolean save) {
-        this.save = save;
-    }
-
     @Override
     public String toString() {
         return "BrailleOptions{" +
@@ -68,7 +58,6 @@ public class BrailleOptions {
                 ", height=" + height +
                 ", threshold=" + threshold +
                 ", inverted=" + inverted +
-                ", save=" + save +
                 '}';
     }
 }

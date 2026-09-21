@@ -28,6 +28,7 @@ This currently uses port 80 for the web server and port 8080 for the backend tha
 POST /api/brailleConverter
 ```
 Content-Type: `multipart/form-data`
+
 | Parameter   | Description |
 | :---------- | :---------- |
 | `image`     | **Required.** The image to upload |
@@ -38,6 +39,17 @@ Content-Type: `multipart/form-data`
 
 
 Options are sent as regular multipart form fields. If one dimension is provided it will scale the other following the image aspect ratio. If neither dimension is provided, a default width of 60 is used. Omit optional fields to use their defaults.
+
+This endpoint only converts the image and returns the generated braille text. It does not require login or a CSRF token.
+
+#### Convert and save an image to braille text
+
+```
+POST /api/saved
+```
+Content-Type: `multipart/form-data`
+
+Uses the same fields as `POST /api/brailleConverter`, but requires login and the `X-XSRF-TOKEN` header. The endpoint converts the image, saves the generated braille text to the logged-in user's saved content, and returns the generated braille text.
 
 
 Examples:

@@ -4,10 +4,9 @@ import com.wirebuyer.chattools.security.filterchain.CustomOidcUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,10 +32,22 @@ public class ImageToBrailleController {
     @CrossOrigin(origins = "*")
     public String convertImageToBraille(
             @RequestParam("image") MultipartFile image,
+            @Validated @ModelAttribute BrailleOptions brailleOptions) {
+
+        return imageToBrailleService.convertImage(image, brailleOptions);
+    }
+
+    @PostMapping(
+            value = "/saved",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.TEXT_PLAIN_VALUE)
+    @CrossOrigin(origins = "*")
+    public String convertAndSaveImageToBraille(
+            @RequestParam("image") MultipartFile image,
             @Validated @ModelAttribute BrailleOptions brailleOptions,
             @AuthenticationPrincipal CustomOidcUser principal) {
 
-        return imageToBrailleService.convertImage(image, brailleOptions, principal);
+        return imageToBrailleService.convertAndSaveImage(image, brailleOptions, principal);
     }
 
     // it's probably dumb to paginate this. only keeping it here so i can show me using it.
@@ -44,15 +55,14 @@ public class ImageToBrailleController {
     @GetMapping(value = "/saved")
     @CrossOrigin(origins = "*")
     public Page<AsciiDto> getSavedAscii(
-            @AuthenticationPrincipal OidcUser principal,
+            @AuthenticationPrincipal CustomOidcUser principal,
             @PageableDefault(size = 4) Pageable pageable) {
-        return imageToBrailleService.getAscii(principal.getSubject(), pageable);
+        return imageToBrailleService.getAscii(principal.getDbId(), pageable);
     }
 
     @DeleteMapping(value = "/saved")
     @CrossOrigin(origins = "*")
-    public void deleteSavedAscii(@AuthenticationPrincipal OidcUser principal, @RequestBody List<UUID> ids) {
-        System.out.println("123");
-        imageToBrailleService.deleteAsciis(principal.getSubject(), ids);
+    public void deleteSavedAscii(@AuthenticationPrincipal CustomOidcUser principal, @RequestBody List<UUID> ids) {
+        imageToBrailleService.deleteAsciis(principal.getDbId(), ids);
     }
 }

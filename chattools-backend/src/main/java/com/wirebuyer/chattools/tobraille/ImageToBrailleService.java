@@ -1,13 +1,13 @@
 package com.wirebuyer.chattools.tobraille;
 
-import com.wirebuyer.chattools.security.User;
 import com.wirebuyer.chattools.security.UserRepository;
+import com.wirebuyer.chattools.security.filterchain.CustomOidcUser;
+
 import org.imgscalr.Scalr;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,16 +36,12 @@ public class ImageToBrailleService {
         potentially add ability to make a request and retrieve an image from an external source.
         - add dithering options
      */
-    public String convertImage(MultipartFile user_image, BrailleOptions brailleOptions, OidcUser principal) {
+    public String convertImage(MultipartFile user_image, BrailleOptions brailleOptions) {
         BufferedImage img;
       /*  TODO:
             - add a check to see if image is null. see how to throw it and provide a meaningful error
             - currently does not support webp for example so it shows up as null. learn more
        */
-        if (brailleOptions.isSave() && principal == null) {
-            throw new AuthenticationCredentialsNotFoundException("Not logged in");
-        }
-
         try {
             img = ImageIO.read(user_image.getInputStream());
         } catch (IOException e) {
@@ -58,37 +54,41 @@ public class ImageToBrailleService {
 
         String res = to_braille(img, brailleOptions);
 
-        // since we checked for auth status before even reading the image this will work here without checking again
-        if (brailleOptions.isSave()) {
-            User user = userRepository.findByProviderId(principal.getSubject()).get();
+        return res;
+    }
 
-            long count = asciiRepository.countByUser(user);
-            if (count > 30) {
-                throw new IllegalStateException("Too many saved (limit: 30)");
-            }
+    public String convertAndSaveImage(MultipartFile user_image, BrailleOptions brailleOptions, CustomOidcUser principal) {
+        if (principal == null) {
+            throw new AuthenticationCredentialsNotFoundException("Not logged in");
+        }
 
-            try {
-                Ascii ascii = new Ascii();
-                ascii.setContent(res);
-                ascii.setUser(user);
-                asciiRepository.save(ascii);
-            } catch (DataIntegrityViolationException e) {
-                throw new IllegalStateException("Ascii already exists!");
-            }
+        String res = convertImage(user_image, brailleOptions);
+
+        long userId = principal.getDbId();
+        long count = asciiRepository.countByUserId(userId);
+        if (count > 30) {
+            throw new IllegalStateException("Too many saved (limit: 30)");
+        }
+
+        try {
+            Ascii ascii = new Ascii();
+            ascii.setContent(res);
+            ascii.setUser(userRepository.getReferenceById(userId));
+            asciiRepository.save(ascii);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalStateException("Ascii already exists!");
         }
 
         return res;
     }
 
-    public Page<AsciiDto> getAscii(String subject, Pageable pageable) {
-        User user = userRepository.findByProviderId(subject).get();
-        return asciiRepository.findByUser(user, pageable).map(AsciiDto::toDto);
+    public Page<AsciiDto> getAscii(long userId, Pageable pageable) {
+        return asciiRepository.findByUserId(userId, pageable).map(AsciiDto::toDto);
     }
 
     @Transactional
-    public void deleteAsciis(String subject, List<UUID> ids) {
-        User user = userRepository.findByProviderId(subject).get();
-        asciiRepository.deleteByUserAndIdIn(user, ids);
+    public void deleteAsciis(long userId, List<UUID> ids) {
+        asciiRepository.deleteByUserIdAndIdIn(userId, ids);
     }
 
 

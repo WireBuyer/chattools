@@ -44,6 +44,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/saved", "/api/saved/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .csrf(csrf -> csrf

@@ -2,6 +2,7 @@ import { Button, Checkbox, Fieldset, NumberInput, Stack } from "@mantine/core";
 import { useState } from "react";
 import classes from "./Form.module.css";
 import ImageDropzone from "../components/ImageDropzone";
+import { useAuth } from "../AuthProvider";
 
 // @ts-ignore
 function BrailleForm({ setAsciiText }) {
@@ -9,12 +10,11 @@ function BrailleForm({ setAsciiText }) {
   const [height, setHeight] = useState("");
   const [threshold, setThreshold] = useState("");
   const [inverted, setInverted] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [save, setSave] = useState(false);
   const [image, setImage] = useState(null);
   const [imageError, setImageError] = useState(false);
+  const { getXsrfToken } = useAuth();
 
-  const handleSubmit = () => {
+  const handleSubmit = (shouldSave = false) => {
     if (!image) {
       setImageError(true);
       return;
@@ -27,12 +27,20 @@ function BrailleForm({ setAsciiText }) {
     if (height !== "") formData.append("height", String(height));
     if (threshold !== "") formData.append("threshold", String(threshold));
     formData.append("inverted", String(inverted));
-    formData.append("save", String(save));
 
-    fetch("/api/brailleConverter", {
+    const requestOptions = {
       method: "POST",
       body: formData,
-    })
+    };
+
+    if (shouldSave) {
+      requestOptions.credentials = "include";
+      requestOptions.headers = {
+        "X-XSRF-TOKEN": getXsrfToken(),
+      };
+    }
+
+    fetch(shouldSave ? "/api/saved" : "/api/brailleConverter", requestOptions)
       .then((response) => {
         if (response.ok) {
           return response.text();
@@ -135,7 +143,7 @@ function BrailleForm({ setAsciiText }) {
         />
         <ImageDropzone setImage={setImage} imageError={imageError} />
       </Fieldset>
-      <Button onClick={handleSubmit}>Submit</Button>
+      <Button onClick={() => handleSubmit()}>Submit</Button>
     </Stack>
   );
 }
